@@ -12,14 +12,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * @author sunny
+ *
  */
 @Repository
 public interface VendorRepository extends PagingAndSortingRepository<Vendor, Integer> {
-
-    // Enabling ORDER BY for a query
-    public List<Vendor> findVendorByDayorderOrderByApplicantAsc(int dayorder);
-
     public List<Vendor> findVendorByDayorderOrderByApplicantAsc(int dayorder, Pageable pageable);
-
 }

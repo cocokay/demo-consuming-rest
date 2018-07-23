@@ -10,12 +10,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Formatter;
 
 /**
- * @author sunny
+ *
  */
-
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Vendor {
@@ -29,9 +30,7 @@ public class Vendor {
     private String dayofweekstr;
     private String starttime;
     private String endtime;
-    private int cnn;
-    private String permit;
-    private String block;
+    private boolean open;
 
     public Vendor() {
     }
@@ -39,22 +38,7 @@ public class Vendor {
     public Vendor(String name, String address) {
         this.applicant = name;
         this.location = address;
-    }
-
-    public String getPermit() {
-        return permit;
-    }
-
-    public void setPermit(String permit) {
-        this.permit = permit;
-    }
-
-    public String getBlock() {
-        return block;
-    }
-
-    public void setBlock(String block) {
-        this.block = block;
+        this.open = this.isOperating(starttime, endtime);
     }
 
     /**
@@ -85,7 +69,6 @@ public class Vendor {
         this.location = location;
     }
 
-
     /**
      * @return the starttime
      */
@@ -114,12 +97,10 @@ public class Vendor {
         this.endtime = endtime;
     }
 
-
     public int getDayOrder() {
 
         return dayorder;
     }
-
 
     /**
      * @return the dayofweekstr
@@ -149,23 +130,31 @@ public class Vendor {
         this.dayorder = dayorder;
     }
 
-    public int getCnn() {
-        return cnn;
+    public boolean getOpen() {
+        open = isOperating(starttime, endtime);
+        return open;
     }
 
-    public void setCnn(int cnn) {
-        this.cnn = cnn;
+    public String getStatus() {
+        if (isOperating(starttime, endtime)) {
+            return "OPEN";
+        }
+        return "CLOSED";
+    }
+
+    private boolean isOperating(String starttime, String endtime) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("Ka");
+        LocalTime cur = LocalTime.now();
+        LocalTime start = LocalTime.parse(starttime, dtf);
+        LocalTime closed = LocalTime.parse(endtime, dtf);
+        return cur.isAfter(start) && cur.isBefore(closed);
     }
 
     @Override
     public String toString() {
-        //return permit + "-" + block + "-" + cnn + "\t" + applicant + "\t\t" + location + "\t" + dayorder + "\t" + dayofweekstr + "\t" + getStarttime() + "\t" + getEndtime();
-        //return applicant + "\t\t" + location +"\t" +starttime + "-" + endtime;
         StringBuilder sb = new StringBuilder();
         Formatter formatter = new Formatter(sb);
-        formatter.format("%-30.30s  %-30.30s %-5.30s %-5.30s", applicant, location, starttime, endtime);
+        formatter.format("%-30.30s  %-30.30s %-5.30s %-5.30s %-5.30s", applicant, location, starttime, endtime, getStatus());
         return sb.toString();
     }
-
-
 }

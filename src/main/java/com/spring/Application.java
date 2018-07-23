@@ -8,14 +8,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.util.Scanner;
 
 @SpringBootApplication
-@EnableJpaRepositories("com.spring")
 @EnableAutoConfiguration
+@EnableJpaRepositories("com.spring")
 @EntityScan("com.spring")
 public class Application implements CommandLineRunner {
-
     //private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     @Autowired
@@ -27,13 +25,6 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        vendorService.run();
-        //EntityManagerFactory emf = applicationContext.getBean(EntityManagerFactory.class);
-        //emf.close();
-    }
-
-    private void menu() {
-        Scanner scanner = new Scanner(System.in);
-
+        vendorService.show();
     }
 }
