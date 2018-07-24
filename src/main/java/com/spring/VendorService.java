@@ -47,15 +47,18 @@ public class VendorService {
                 openList.add(v);
             }
         }
+        
+        System.out.println("SHOW OPEN FOOD TRUCKS: " + openList.size());
         if (openList.isEmpty()) {
-            return; //todo, display message            
+            System.out.println("\n-- All closed --");
+            return;           
         }
         repository.saveAll(openList);
 
         long count = openList.size();
         int pages = (int) Math.ceil(count / (float) PAGE_SIZE);
 
-        System.out.println("SHOW OPEN FOOD TRUCKS: " + openList.size());
+        
         //System.out.println("Food trucks opened today: " + all.size());
         System.out.println("Total pages: " + pages);
 
@@ -67,14 +70,12 @@ public class VendorService {
             try {
                 int input = scanner.nextInt(); //todo handle invalid case
                 if (input == 1) {
-                    //System.out.printf("\npage num: %s%n", i);
                     countVendor = display(today, i, countVendor);
                     i++;
                 } else if (input == 2) {
                     break;
                 } else {
                     System.out.print("Invalid input - ");
-                    //continue;
                 }
             } catch (InputMismatchException e) {
                 System.out.print("Invalid input - ");
